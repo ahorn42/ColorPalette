@@ -166,13 +166,13 @@ def get_hex_color(color):
 def get_text_width(font, text):
 	width = 0
 	for ch in text:
-		width += font.getsize(ch)[0]
+		width += font.getbbox(ch)[2] - font.getbbox(ch)[0]
 	return width
 
 def get_text_height(font, text):
 	height = []
 	for ch in text:
-		height.append(font.getsize(ch)[1])
+		height.append(font.getbbox(ch)[3] - font.getbbox(ch)[1])
 	return max(height)
 
 @click.command()

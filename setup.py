@@ -12,10 +12,10 @@ setup(
     packages=['ColorPalette'],
     include_package_data=True,
     install_requires=[
-        'Pillow==6.2.1',
-        'matplotlib==3.0.3',
-        'scipy==1.3.1',
-        'pandas==0.24.2',
+        'Pillow==11.0.0',
+        'matplotlib==3.9.3',
+        'scipy==1.14.1',
+        'pandas==2.2.3',
         'click==6.7'
     ],
     entry_points={
