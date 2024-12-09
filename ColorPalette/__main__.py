@@ -14,6 +14,8 @@ import colorsys
 import click
 
 def get_color_pallete(input_file, output_file, num_colors, display_color=False):
+	print("read image")
+	
 	img = plt.imread(input_file)
 
 	red, green, blue = [], [], []
@@ -30,6 +32,7 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 		'blue': blue
 	})
 
+	print("clustering")
 	df['standardized_red'] = cluster.vq.whiten(df['red'])
 	df['standardized_green'] = cluster.vq.whiten(df['green'])
 	df['standardized_blue'] = cluster.vq.whiten(df['blue'])
@@ -46,14 +49,16 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 		))
 
 	colors.sort(key=lambda x: step(x[0], x[1], x[2], 8))
+	print(colors)
 
+	print("prepare text")
 	# FIXME: need a smart way to resize fonts based on picture size
 	font_size = 11
 	font = ImageFont.truetype("Roboto-Medium.ttf", font_size)
 	sample_text = '#F8F8F7'
 	proper_font_size = False
 
-
+	print("open new image")
 	pil_img = Image.open(input_file)
 	pil_width, pil_height = pil_img.size
 	height = 0
@@ -81,6 +86,7 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 		else:
 			proper_font_size = True
 
+	print ("print color samples")
 	x_offset = 0
 	for i in range(len(colors)):
 		if i == len(colors) - 1:
