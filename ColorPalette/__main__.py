@@ -14,7 +14,7 @@ import colorsys
 import click
 import time
 
-def get_color_pallete(input_file, output_file, num_colors, display_color=False):
+def get_color_pallete(input_file, output_file, num_colors, display_color=False, iterations=20):
 	start = time.perf_counter()
 	start0 = start
 	
@@ -39,7 +39,7 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 	df['standardized_green'] = cluster.vq.whiten(df['green'])
 	df['standardized_blue'] = cluster.vq.whiten(df['blue'])
 
-	color_pallete, distortion = cluster.vq.kmeans(df[['standardized_red', 'standardized_green', 'standardized_blue']], num_colors)
+	color_pallete, distortion = cluster.vq.kmeans(df[['standardized_red', 'standardized_green', 'standardized_blue']], num_colors, iter=iterations)
 	colors = []
 	red_std, green_std, blue_std = df[['red', 'green', 'blue']].std()
 	for color in color_pallete:
@@ -151,7 +151,7 @@ def append_color_pallete(original_image, color_pallete, output_file):
 
 	combined_img.save(output_file)
 
-def create_pallete(filename, num_colors, display_color=False):
+def create_pallete(filename, iterations, num_colors, display_color=False):
 	file_path = filename.split('/')
 	file_prefix = ''
 	file_split = ''
@@ -166,7 +166,7 @@ def create_pallete(filename, num_colors, display_color=False):
 
 	output_palette = file_prefix + file_split[0] + '_palette.' + file_split[1]
 	output_combined = file_prefix + file_split[0] + '_with_palette.' + file_split[1]
-	get_color_pallete(filename, output_palette, num_colors, display_color)
+	get_color_pallete(filename, output_palette, num_colors, display_color, iterations)
 	append_color_pallete(filename, output_palette, output_combined)
 
 def step(r, g, b, repititions=1):
@@ -202,10 +202,11 @@ def get_text_height(font, text):
 @click.command()
 @click.argument('image_file')
 @click.argument('num_colors')
+@click.argument('iterations', default=20)
 @click.option('--text', '-t', default=False, is_flag=True, help='')
-def main(image_file, num_colors, text):
+def main(image_file, iterations, num_colors, text):
 	try:
-		create_pallete(image_file, int(num_colors), text)
+		create_pallete(image_file, int(iterations), int(num_colors), text)
 	except Exception as e:
 		print(e)
 
