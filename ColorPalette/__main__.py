@@ -12,8 +12,12 @@ import pandas as pd
 import math
 import colorsys
 import click
+import time
 
 def get_color_pallete(input_file, output_file, num_colors, display_color=False):
+	start = time.perf_counter()
+	start0 = start
+	
 	print("read image")
 	
 	img = plt.imread(input_file)
@@ -26,6 +30,10 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 		'blue': blue
 	})
 
+	stop = time.perf_counter()
+	print(f"{stop - start:0.3f} sec")
+
+	start = time.perf_counter()
 	print("clustering")
 	df['standardized_red'] = cluster.vq.whiten(df['red'])
 	df['standardized_green'] = cluster.vq.whiten(df['green'])
@@ -43,8 +51,12 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 		))
 
 	colors.sort(key=lambda x: step(x[0], x[1], x[2], 8))
-	print(colors)
+	print(f"colors: {colors}")
 
+	stop = time.perf_counter()
+	print(f"{stop - start:0.3f} sec")
+
+	start = time.perf_counter()
 	print("prepare text")
 	# FIXME: need a smart way to resize fonts based on picture size
 	font_size = 11
@@ -52,6 +64,10 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 	sample_text = '#F8F8F7'
 	proper_font_size = False
 
+	stop = time.perf_counter()
+	print(f"{stop - start:0.3f} sec")
+
+	start = time.perf_counter()
 	print("open new image")
 	pil_img = Image.open(input_file)
 	pil_width, pil_height = pil_img.size
@@ -80,6 +96,10 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 		else:
 			proper_font_size = True
 
+	stop = time.perf_counter()
+	print(f"{stop - start:0.3f} sec")
+
+	start = time.perf_counter()
 	print ("print color samples")
 	x_offset = 0
 	for i in range(len(colors)):
@@ -105,6 +125,10 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 			x_offset += single_img_space
 
 	pallete.save(output_file)
+
+	stop = time.perf_counter()
+	print(f"{stop - start:0.3f} sec")
+	print(f"total: {stop - start0:0.3f} sec")
 
 def append_color_pallete(original_image, color_pallete, output_file):
 	og_img = Image.open(original_image)
