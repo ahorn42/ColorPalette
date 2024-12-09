@@ -5,6 +5,7 @@
 .DS_Store
 __pycache__/
 env/
+.venv/
 var/
 
 # vim files
