@@ -18,13 +18,7 @@ def get_color_pallete(input_file, output_file, num_colors, display_color=False):
 	
 	img = plt.imread(input_file)
 
-	red, green, blue = [], [], []
-	for line in img:
-		for pixel in line:
-			r, g, b = pixel
-			red.append(r)
-			green.append(g)
-			blue.append(b)
+	red, green, blue = (img[:, :, i].ravel() for i in (0, 1, 2))
 
 	df = pd.DataFrame({
 		'red': red,
